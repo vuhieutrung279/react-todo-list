@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.scss';
 import TodoApp from './components/TodoApp';
 import NoImg from './images/no-task.png';
 class App extends Component {
@@ -18,7 +18,23 @@ class App extends Component {
     this.onChange = this.onChange.bind(this);
     this.onAddTask = this.onAddTask.bind(this);
   }
+  // run before render
+  componentWillMount() {
+    // load items array from localStorage, set in state
+    let itemsList = localStorage.getItem('items')
+    if (itemsList) {
+      this.setState({
+        toDoItems: JSON.parse(localStorage.getItem('items'))
+      })
+    }
+  }
 
+  // run after update state
+  componentDidUpdate() {
+    // on each update, sync our state with localStorage
+    localStorage.setItem('items', JSON.stringify(this.state.toDoItems))
+  }
+  
   onItemClicked(item) {
     return () => {
       const { toDoItems } = this.state;
@@ -55,7 +71,7 @@ class App extends Component {
     const { toDoItems } = this.state;
     return (
       <div className="App">
-          <h1>DAILIST</h1>
+          <h1>TO DO LIST</h1>
           <div className="main-content">
             {
               toDoItems.length === 0 && <div className="no-img">
